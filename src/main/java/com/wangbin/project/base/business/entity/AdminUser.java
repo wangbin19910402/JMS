@@ -109,7 +109,4 @@ public class AdminUser {
         this.roleName = roleName;
     }
 
-    public static void main(String[] args){
-        System.out.println(8%6%2);
-    }
 }
