@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wangbin.project.base.business.mapper.RolePerReleationMapper" >
+  <resultMap id="BaseResultMap" type="com.wangbin.project.base.business.entity.RolePerReleation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="per_id" property="perId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_id, per_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from role_per_releation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from role_per_releation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wangbin.project.base.business.entity.RolePerReleation" >
+    insert into role_per_releation (id, role_id, per_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{perId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wangbin.project.base.business.entity.RolePerReleation" >
+    insert into role_per_releation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="perId != null" >
+        per_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="perId != null" >
+        #{perId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wangbin.project.base.business.entity.RolePerReleation" >
+    update role_per_releation
+    <set >
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="perId != null" >
+        per_id = #{perId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wangbin.project.base.business.entity.RolePerReleation" >
+    update role_per_releation
+    set role_id = #{roleId,jdbcType=INTEGER},
+      per_id = #{perId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 新增sql -->
+  <select id="getPerIdsByRoleId" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select per_id
+    from role_per_releation
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByInfo" parameterType="com.wangbin.project.base.business.entity.RolePerReleation" >
+    delete from role_per_releation
+    where role_id = #{roleId} and per_id = #{perId}
+  </delete>
+
+  <insert id="insertInfos" parameterType="com.wangbin.project.base.business.entity.RolePerReleation" >
+    insert into role_per_releation (role_id, per_id) values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.roleId},#{item.perId})
+    </foreach>
+  </insert>
+
+
+</mapper>

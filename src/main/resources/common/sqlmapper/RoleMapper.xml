@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wangbin.project.base.business.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.wangbin.project.base.business.entity.Role" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_name, role_desc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wangbin.project.base.business.entity.Role" >
+    insert into role (id, role_name, role_desc
+      )
+    values (#{id,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, #{roleDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wangbin.project.base.business.entity.Role" >
+    update role
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null" >
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 新增 -->
+  <select id="getRoleListByParam" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select
+    <include refid="Base_Column_List" />
+    from role where 1=1
+    <if test="roleName != null" >
+      and role_name like CONCAT('%',#{roleName,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+  <select id="getRoleSumByParam" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    select count(1)
+    <include refid="Base_Column_List" />
+    from role where 1=1
+    <if test="roleName != null" >
+      and role_name like CONCAT('%',#{roleName,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+  <select id="getRoleByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from role where role_name = #{roleName,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByRoleIds" parameterType="java.lang.Integer" >
+    delete from role
+    where id in
+    <foreach item="ids" collection="array" open="(" separator="," close=")">
+      #{ids}
+    </foreach>
+  </delete>
+
+</mapper>

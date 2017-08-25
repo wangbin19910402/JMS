@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wangbin.project.base.business.mapper.PermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.wangbin.project.base.business.entity.Permission" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="permission_name" property="permissionName" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, permission_name, url
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from permission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from permission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wangbin.project.base.business.entity.Permission" >
+    insert into permission (id, permission_name, url)
+    values (#{id,jdbcType=INTEGER}, #{permissionName,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wangbin.project.base.business.entity.Permission" >
+    update permission
+    <set >
+      <if test="permissionName != null" >
+        permission_name = #{permissionName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 新增 -->
+  <select id="getPermissionListByParam" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select
+    <include refid="Base_Column_List" />
+    from permission where 1=1
+    <if test="permissionName != null" >
+      and permission_name like  CONCAT('%',#{permissionName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="url != null" >
+      and url like CONCAT('%',#{url,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+  <select id="getPermissionSumByParam" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    select count(1)
+    <include refid="Base_Column_List" />
+    from permission where 1=1
+    <if test="permissionName != null" >
+      and permission_name like  CONCAT('%',#{permissionName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="url != null" >
+      and url like CONCAT('%',#{url,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+  <select id="getPermissionByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from permission where permission_name = #{permissionName,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deletePermissionByIds" parameterType="java.lang.Integer" >
+    delete from permission
+    where id in
+    <foreach item="ids" collection="array" open="(" separator="," close=")">
+      #{ids}
+    </foreach>
+  </delete>
+
+  <select id="getPermissionByUrl" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from permission where url = #{url,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getPermissionListByPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select
+    <include refid="Base_Column_List" />
+    from permission where 1=1
+    <if test="permissionName != null" >
+      and permission_name like  CONCAT('%',#{permissionName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="url != null" >
+      and url like CONCAT('%',#{url,jdbcType=VARCHAR},'%')
+    </if>
+    limit #{pageBegin} , #{pageSize}
+  </select>
+
+  <select id="getPermissionByIds" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from permission
+    where id in
+    <foreach item="ids" collection="list" open="(" separator="," close=")">
+      #{ids}
+    </foreach>
+  </select>
+
+</mapper>
